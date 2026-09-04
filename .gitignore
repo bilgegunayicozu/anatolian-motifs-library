@@ -1,0 +1,25 @@
+# OS / editors
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+
+# python
+__pycache__/
+*.pyc
+
+# the printed page images (copyright — never published), review sheets, scratch
+Mine Erberk Anadolu Motifleri/
+_review/
+_shots/
+_to_delete/
+
+# bulk exports of the library (motifs/ is the source of truth; data/ is built from it)
+library.json
+library-index.json
+
+# private brief and chat exports
+HANDOFF_FABLE5.md
+Claude outputs/

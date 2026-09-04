@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Digital Library of Anatolian Motifs</title>
+  <meta name="description" content="A generative, research-grounded digital library of Anatolian kilims: 28 catalogued motifs with 1,477 documented variants, 20 weaving regions, and a live loom that weaves a citable specimen from a seed." />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="./assets/favicon-180.png" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Digital Library of Anatolian Motifs" />
+  <meta property="og:description" content="Real Anatolian kilim motifs, woven live on a simulated loom. 28 motifs, 1,477 documented variants, 20 regions, every specimen citable by seed." />
+  <meta property="og:image" content="./assets/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Digital Library of Anatolian Motifs" />
+  <meta name="twitter:description" content="Real Anatolian kilim motifs, woven live on a simulated loom. Every specimen carries a citable seed." />
+  <meta name="twitter:image" content="./assets/og-image.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=Spectral:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css" />
+  <!-- p5.js — the only library (CLAUDE.md §1), vendored so the site is self-contained -->
+  <script src="./vendor/p5.min.js"></script>
+</head>
+<body>
+  <a class="skip" href="#specimen">Skip to the specimen</a>
+
+  <header class="masthead">
+    <p class="eyebrow mono">Anatolian Motifs Archive</p>
+    <h1>Digital Library of Anatolian Motifs</h1>
+    <p class="lede">Every kilim here is woven from a documented catalog, not invented: twenty-eight motifs with their names and meanings, one thousand four hundred and seventy-seven variants traced from the printed record, and twenty weaving regions with their natural-dye palettes and compositions.</p>
+  </header>
+
+  <main>
+    <!-- No. 01 — Specimen of the loom -->
+    <section class="section" id="specimen" aria-labelledby="h-specimen">
+      <div class="section-head">
+        <span class="num mono">No. 01</span>
+        <h2 id="h-specimen">Specimen of the loom</h2>
+        <span class="rule" aria-hidden="true"></span>
+        <span class="count mono" id="specimen-count">woven live · citable by seed</span>
+      </div>
+
+      <div class="specimen">
+        <figure class="plate">
+          <div class="mat" id="stage" aria-label="The woven kilim, rendered live on a simulated loom">
+            <!-- p5 mounts its canvas here -->
+          </div>
+          <div class="label mono" id="hover-label" role="status" aria-live="polite" hidden></div>
+        </figure>
+
+        <div class="accession">
+          <div class="acc-block mono">
+            <div class="acc-head" id="acc-number">ACCESSION —</div>
+            <dl class="acc-rows">
+              <div><dt>Region</dt><dd id="acc-region">—</dd></div>
+              <div><dt>Composition</dt><dd id="acc-composition">—</dd></div>
+              <div><dt>Format</dt><dd id="acc-format">—</dd></div>
+              <div><dt>Palette</dt><dd id="acc-palette">—</dd></div>
+              <div><dt>Motif inventory</dt><dd id="acc-inventory">—</dd></div>
+              <div><dt>Loom count</dt><dd id="acc-loom">—</dd></div>
+              <div><dt>Weave</dt><dd id="acc-weave">—</dd></div>
+              <div><dt>Seed</dt><dd id="acc-seed" class="accent">—</dd></div>
+            </dl>
+          </div>
+          <h3 class="spec-title" id="spec-title">—</h3>
+          <p class="spec-desc" id="spec-desc">—</p>
+
+          <div class="actions">
+            <button class="btn mono" id="btn-weave" type="button">Weave another <span class="tr">— Dokumak</span></button>
+            <button class="btn mono" id="btn-save" type="button">Save plate <span class="tr">— PNG</span></button>
+            <label class="select mono">
+              <span class="visually-hidden">Region</span>
+              <select id="sel-region" aria-label="Choose a weaving region for the next specimen">
+                <option value="">Any region</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- No. 02 — The motif index -->
+    <section class="section" id="index" aria-labelledby="h-index">
+      <div class="section-head">
+        <span class="num mono">No. 02</span>
+        <h2 id="h-index">The motif index</h2>
+        <span class="rule" aria-hidden="true"></span>
+        <span class="count mono" id="index-count">— catalogued motifs · tap to open</span>
+      </div>
+      <p class="section-note">Grouped by what the weaver meant. Open a motif for its meaning, the regions that weave it, and its variations — the same grid through different hands, different dyes, and the forms recorded in the printed catalog.</p>
+      <div class="accordion" id="motif-accordion"></div>
+    </section>
+
+    <!-- No. 03 — Weaving regions -->
+    <section class="section" id="regions" aria-labelledby="h-regions">
+      <div class="section-head">
+        <span class="num mono">No. 03</span>
+        <h2 id="h-regions">Weaving regions</h2>
+        <span class="rule" aria-hidden="true"></span>
+        <span class="count mono" id="regions-count">— regions · tap to open</span>
+      </div>
+      <p class="section-note">Each region carries its own dyes, its favoured compositions and formats, and the motifs its weavers reach for. Open one to see what it weaves; each motif links back to the index.</p>
+      <div class="accordion" id="region-accordion"></div>
+    </section>
+  </main>
+
+  <footer class="colophon mono">
+    <p id="colophon-sizes">—</p>
+    <p>Made with p5.js and vanilla ES modules; no frameworks, no build step. Motifs are rasterised to integer loom cells and coloured with natural-dye values — madder, indigo, walnut, henna — then aged. All chance runs through one seeded generator, so every specimen carries a citable seed and can be re-woven exactly.</p>
+    <p>Motif grids, meanings and regional catalog follow the project's research reference; variants are auto-traced from Mine Erbek, <i>Çatalhöyük'ten Günümüze Anadolu Motifleri</i> (T.C. Kültür Bakanlığı) and are marked pending validation until checked against the printed page. Nothing here is invented: every motif comes from the documented catalog.</p>
+    <p>A woven kilim may seem to carry a mistake — a motif a cell off, a colour that changes order mid-band, a hook that does not close. This is deliberate. Kilims carry their authenticity through such irregularities, the trace of a hand rather than a machine, and the library keeps them as an aesthetic choice.</p>
+    <p class="quiet">Anatolian Motifs Archive · Digital Library of Anatolian Motifs · <a id="colophon-repo" href="./README.md">source &amp; method</a></p>
+  </footer>
+
+  <script type="module" src="./src/sketch.js"></script>
+</body>
+</html>
