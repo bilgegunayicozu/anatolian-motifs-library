@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>OG plate</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Spectral:ital,wght@0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;background:#fff;color:#141414;width:1200px;height:630px;overflow:hidden}
+  .wrap{display:grid;grid-template-columns:560px 1fr;gap:48px;padding:44px 56px;height:630px;box-sizing:border-box;align-items:center}
+  .mat{border:1px solid #141414;padding:22px;background:#fff;display:inline-block}
+  .mat canvas{display:block;outline:1px solid rgba(20,20,20,.16)}
+  .eyebrow{font:500 13px "IBM Plex Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:rgba(20,20,20,.56);margin:0 0 18px}
+  h1{font:400 50px/1.05 Spectral,Georgia,serif;margin:0 0 10px;letter-spacing:-.01em}
+  .sub{font:300 italic 24px Spectral,serif;color:rgba(20,20,20,.56);margin:0 0 28px}
+  .acc{font:500 13px "IBM Plex Mono",monospace;color:#C42B1C;letter-spacing:.08em;border-top:2px solid #141414;border-bottom:2px solid #141414;padding:10px 0;margin:0 0 12px}
+  .facts{font:400 13px/1.7 "IBM Plex Mono",monospace;color:rgba(20,20,20,.7);margin:0}
+</style></head>
+<body>
+<div class="wrap">
+  <div><div class="mat" id="stage"></div></div>
+  <div>
+    <p class="eyebrow">Anatolian Motifs Archive</p>
+    <h1>Digital Library of Anatolian Motifs</h1>
+    
+    <p class="acc" id="acc">ACCESSION —</p>
+    <p class="facts" id="facts"></p>
+  </div>
+</div>
+<script src="../vendor/p5.min.js"></script>
+<script type="module">
+  import { loadData, weave } from '../src/generator.js';
+  import { paintLoom } from '../src/loom.js';
+  const u = new URL(location.href);
+  const data = await loadData('../data/');
+  const spec = weave(data, { region: u.searchParams.get('region') || 'konya', seed: u.searchParams.get('seed') || 4827193 });
+  const cs = Math.floor(Math.min(500 / spec.gridW, 470 / spec.gridH));
+  new p5(p => {
+    p.setup = () => { const c = p.createCanvas(spec.gridW * cs, spec.gridH * cs); c.parent('stage'); p.pixelDensity(1); p.noSmooth(); p.noLoop(); };
+    p.draw = () => { p.background('#fff'); paintLoom(p, spec.loom, { cellSize: cs, seed: spec.seed, rng: spec.rng, aging: true, fray: true, weave: spec.weave, ivory: data.dyes.ivory_wool.hex }); };
+  });
+  document.getElementById('acc').textContent = `ACCESSION ${spec.accession}`;
+  document.getElementById('facts').innerHTML = `${spec.region.name} · ${spec.comp.name} · ${spec.ratio.name}<br>${data.motifs.motifs.length} motifs · 1,477 documented variants · ${data.regions.regions.length} regions<br>seed ${spec.seed} · every specimen is citable and re-weavable`;
+</script>
+</body></html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Plates — sanity sheet</title>
+<style>
+  body{margin:0;background:#fff;color:#141414;font:12px/1.4 "IBM Plex Mono",Menlo,monospace;padding:20px}
+  .grid{display:grid;grid-template-columns:repeat(var(--cols,5),1fr);gap:18px}
+  .cell{border:1px solid #141414;padding:8px}
+  .cell canvas{display:block;max-width:100%;height:auto;outline:1px solid rgba(20,20,20,.16);margin:0 auto}
+  .cap{margin-top:6px;color:rgba(20,20,20,.7)}
+  .cap b{color:#C42B1C}
+</style></head>
+<body>
+<div class="grid" id="grid"></div>
+<script src="../vendor/p5.min.js"></script>
+<script type="module">
+  import { loadData, weave } from '../src/generator.js';
+  import { paintLoom } from '../src/loom.js';
+  const u = new URL(location.href);
+  const data = await loadData('../data/');
+  const regions = (u.searchParams.get('regions') || data.regions.regions.map(r => r.key).join(',')).split(',');
+  const seeds = (u.searchParams.get('seeds') || '1,2,3').split(',').map(Number);
+  const cols = Number(u.searchParams.get('cols') || 5);
+  document.getElementById('grid').style.setProperty('--cols', cols);
+  const cs = Number(u.searchParams.get('cs') || 3);
+  for (const rk of regions) for (const s of seeds) {
+    const spec = weave(data, { region: rk, seed: s });
+    const cell = document.createElement('div'); cell.className = 'cell';
+    const holder = document.createElement('div'); cell.appendChild(holder);
+    const cap = document.createElement('div'); cap.className = 'cap';
+    cap.innerHTML = `<b>${spec.accession}</b> ${spec.region.name}<br>${spec.comp.name} · ${spec.ratio.name} · ${spec.loomCount}<br>${spec.inventory.map(i => i.key + '×' + i.n).join(' ')}`;
+    cell.appendChild(cap);
+    document.getElementById('grid').appendChild(cell);
+    new p5(p => {
+      p.setup = () => { const c = p.createCanvas(spec.gridW * cs, spec.gridH * cs); c.parent(holder); p.pixelDensity(1); p.noSmooth(); p.noLoop(); };
+      p.draw = () => { p.background('#fff'); paintLoom(p, spec.loom, { cellSize: cs, seed: spec.seed, rng: spec.rng, aging: true, fray: true, weave: spec.weave, ivory: data.dyes.ivory_wool.hex }); };
+    });
+  }
+  document.title = 'plates ready';
+</script>
+</body></html>
