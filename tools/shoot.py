@@ -44,12 +44,10 @@ try:
         pg.locator("#motif-accordion .motif-btn >> nth=0").scroll_into_view_if_needed()
         pg.screenshot(path=f"{OUT}/02-index-elibelinde.png", full_page=False)
         # hand strength slider
-        pg.locator("#hand-elibelinde").fill("0.8"); pg.wait_for_timeout(400)
-        pg.locator("#motif-elibelinde .var-group >> nth=2").scroll_into_view_if_needed(); pg.wait_for_timeout(300)
+        pg.locator("#motif-elibelinde .var-group >> nth=1").scroll_into_view_if_needed(); pg.wait_for_timeout(300)
         pg.screenshot(path=f"{OUT}/02b-elibelinde-forms.png")
         # open a curvilinear motif (karanfil) via hash
         pg.goto(f"http://127.0.0.1:{PORT}/?region=milas&seed=99#motif=karanfil"); pg.wait_for_selector("#stage canvas"); fonts(pg); pg.wait_for_timeout(1500)
-        pg.locator("#hand-karanfil").fill("0.9"); pg.wait_for_timeout(400)
         pg.locator("#motif-karanfil").scroll_into_view_if_needed(); pg.wait_for_timeout(300)
         pg.screenshot(path=f"{OUT}/03-karanfil-curvilinear.png")
         # regions
@@ -70,9 +68,9 @@ try:
         for k in keys:
             pg.evaluate(f"document.querySelector('#motif-{k} .motif-btn').click()"); pg.wait_for_timeout(120)
             g = pg.locator(f"#motif-{k} .var-group").count()
-            if g < 3: bad.append((k, g))
+            if g < 2: bad.append((k, g))
         pg.wait_for_timeout(2000)
-        print("motifs with <3 variation groups:", bad)
+        print("motifs with <2 variation groups:", bad)
         # mobile
         m = b.new_page(viewport={"width": 390, "height": 844}, device_scale_factor=2)
         m.on("pageerror", lambda e: errors.append("mobile " + str(e)))

@@ -31,7 +31,7 @@
     document.getElementById('grid').appendChild(cell);
     new p5(p => {
       p.setup = () => { const c = p.createCanvas(spec.gridW * cs, spec.gridH * cs); c.parent(holder); p.pixelDensity(1); p.noSmooth(); p.noLoop(); };
-      p.draw = () => { p.background('#fff'); paintLoom(p, spec.loom, { cellSize: cs, seed: spec.seed, rng: spec.rng, aging: true, fray: true, weave: spec.weave, ivory: data.dyes.ivory_wool.hex }); };
+      p.draw = () => { p.background('#fff'); paintLoom(p, spec.loom, { cellSize: cs, seed: spec.seed, rng: spec.rng, aging: false, fray: false, weave: spec.weave, ivory: data.dyes.ivory_wool.hex }); };
     });
   }
   document.title = 'plates ready';
