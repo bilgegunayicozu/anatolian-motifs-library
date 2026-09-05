@@ -14,8 +14,12 @@ const REGION_CODES = {
   adiyaman: 'ADY', dosemealti: 'DSM', 'fethiye-mut': 'FTM',
 };
 
-// short side in loom cells per aspect ratio (a typical loom is 80–140 cells wide)
-const SHORT_SIDE = { namazlik: 78, yolluk: 54, sergi: 84, buyuk: 92, heybe: 72 };
+// Short side in loom cells per aspect ratio (a typical loom is 80–140 cells wide).
+// Both loom dimensions are kept ODD so a motif of odd width — most of them — can sit
+// exactly on the centre column or row; on an even loom the mirror axis falls between
+// two cells and reflecting the field would shave a cell off every centred motif.
+const SHORT_SIDE = { namazlik: 79, yolluk: 55, sergi: 85, buyuk: 93, heybe: 73 };
+const odd = n => (n % 2 === 0 ? n + 1 : n);
 
 /** Load the whole data layer once. Paths are relative so the site works under /repo/. */
 export async function loadData(base = './data/') {
@@ -47,8 +51,8 @@ export function weave(data, opts = {}) {
   const compKey = rng.pick(region.compositions);
   const comp = data.compositions[compKey];
 
-  const short = SHORT_SIDE[ratioKey] ?? 84;
-  const gridW = short, gridH = Math.round(short * ratio.h / ratio.w);
+  const short = SHORT_SIDE[ratioKey] ?? 85;
+  const gridW = odd(short), gridH = odd(Math.round(short * ratio.h / ratio.w));
 
   const palette = regionPalette(region, data.dyes, rng.fork('palette'));
   const pool = region.motif_pool.filter(k => data.patterns[k]);
