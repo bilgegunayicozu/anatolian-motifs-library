@@ -1,18 +1,16 @@
 // index.js — No. 02, the motif index: an accordion of categories → motif rows →
 // expanded detail with meaning, regions and the variations (§4):
-//   1. weaver's hand   — the base grid through weaverHand at several seeds
-//   2. regional dyes   — the grid in the palettes of regions that weave it
-//   3. documented forms — the auto-traced variants from the printed catalog
+//   1. regional dyes   — the grid in the palettes of regions that weave it
+//   2. documented forms — the auto-traced variants from the printed catalog
 // Variation swatches render lazily on first expand and are cached.
 
 import { parseGrid } from './motif.js';
-import { weaverHand } from './weaverhand.js';
 import { swatchPalette } from './palette.js';
 import { makeRng, hashString } from './rng.js';
 import { drawSwatch, makeCanvas } from './swatch.js';
 
 const ACCENT = '#C42B1C', INK = '#141414';
-const HAND_SEEDS = 5, PAGE = 24;
+const PAGE = 24;
 let DATA, ROOT;
 const rows = new Map();          // key → { item, btn, detail, built, motif }
 const variantCache = new Map();  // key → promise of variants json
@@ -96,7 +94,6 @@ function buildDetail(m, detail) {
   }));
   if (!m.grid) return;
   const base = parseGrid(m.grid);
-  detail.appendChild(handGroup(m, base));
   detail.appendChild(dyeGroup(m, base));
   detail.appendChild(formsGroup(m, base));
 }
@@ -115,37 +112,10 @@ function swatch(caption, pending) {
   return { el: s, canvas: c };
 }
 
-/* 1. weaver's hand */
-function handGroup(m, base) {
-  const g = group('Variations · I', "Weaver's hand", `${HAND_SEEDS} seeds`);
-  const ctl = el('div', 'hand-control mono');
-  ctl.innerHTML = `<label for="hand-${m.key}">hand strength</label><input id="hand-${m.key}" type="range" min="0" max="1" step="0.05" value="0.25" aria-label="Hand strength: how loosely the weaver follows the grid"><output for="hand-${m.key}">0.25</output>`;
-  const strip = el('div', 'var-strip');
-  const cache = new Map();
-  const render = (strength) => {
-    strip.innerHTML = '';
-    for (let i = 0; i < HAND_SEEDS; i++) {
-      const seed = (hashString(m.key) + i * 7919) >>> 0;
-      const key = `${strengthStep(strength)}|${seed}`;
-      let pat = cache.get(key);
-      if (!pat) { pat = weaverHand(base, seed, { handStrength: strengthStep(strength), curvilinear: m.curvilinear }); cache.set(key, pat); }
-      const s = swatch(`seed <b>${seed}</b><br>${pat.w} × ${pat.h}`);
-      drawSwatch(s.canvas, pat, { primary: ACCENT, secondary: INK, size: 96 });
-      strip.appendChild(s.el);
-    }
-  };
-  const input = ctl.querySelector('input'), out = ctl.querySelector('output');
-  let t = null;
-  input.addEventListener('input', () => { out.textContent = Number(input.value).toFixed(2); clearTimeout(t); t = setTimeout(() => render(Number(input.value)), 60); });
-  g.append(ctl, strip);
-  render(0.25);
-  return g;
-}
-
-/* 2. regional dyes */
+/* 1. regional dyes */
 function dyeGroup(m, base) {
   const keys = (m.regions.length ? m.regions : (m.regions_documented || [])).slice(0, 3);
-  const g = group('Variations · II', 'Regional dyes', keys.length ? `${keys.length} palettes` : '');
+  const g = group('Variations · I', 'Regional dyes', keys.length ? `${keys.length} palettes` : '');
   const strip = el('div', 'var-strip');
   if (!keys.length) strip.appendChild(el('p', 'trace-note mono', 'No regional palette recorded for this motif.'));
   keys.forEach(k => {
@@ -163,9 +133,9 @@ function dyeName(hex) {
   return e ? e[0].replace(/_/g, ' ') : hex;
 }
 
-/* 3. documented forms */
+/* 2. documented forms */
 function formsGroup(m, base) {
-  const g = group('Variations · III', 'Documented forms', m.variant_count ? `${m.variant_count} in the printed catalog` : '');
+  const g = group('Variations · II', 'Documented forms', m.variant_count ? `${m.variant_count} in the printed catalog` : '');
   if (m.variations_note) g.appendChild(el('p', 'var-note', m.variations_note));
   if (!m.variant_count) {
     g.appendChild(el('p', 'trace-note mono', 'No traced variants for this motif yet — the base grid follows the research reference.'));

@@ -74,7 +74,7 @@ function sketch(p) {
     p.background('#ffffff');
     paintLoom(p, spec.loom, {
       cellSize, x0: 0, y0: 0, seed: spec.seed, rng: spec.rng,
-      aging: true, fray: true, weave: spec.weave, paper: '#ffffff', ivory: data.dyes.ivory_wool.hex,
+      aging: false, fray: false, weave: spec.weave, paper: '#ffffff', ivory: data.dyes.ivory_wool.hex,
     });
   };
   p.mouseMoved = () => hover(p.mouseX, p.mouseY, false);
@@ -130,7 +130,7 @@ function savePlate() {
   const g = p5inst.createGraphics(spec.gridW * cs + pad * 2, spec.gridH * cs + pad * 2 + 40);
   g.pixelDensity(1); g.noSmooth();
   g.background('#ffffff');
-  paintLoom(g, spec.loom, { cellSize: cs, x0: pad, y0: pad, seed: spec.seed, rng: spec.rng, aging: true, fray: true, weave: spec.weave, paper: '#ffffff', ivory: data.dyes.ivory_wool.hex });
+  paintLoom(g, spec.loom, { cellSize: cs, x0: pad, y0: pad, seed: spec.seed, rng: spec.rng, aging: false, fray: false, weave: spec.weave, paper: '#ffffff', ivory: data.dyes.ivory_wool.hex });
   g.noStroke(); g.fill('#141414'); g.textFont('monospace'); g.textSize(13);
   g.text(`${spec.accession} · ${spec.region.name} · ${spec.comp.name} · seed ${spec.seed} · Digital Library of Anatolian Motifs`, pad, g.height - 18);
   g.stroke('#141414'); g.noFill(); g.rect(pad - 1, pad - 1, spec.gridW * cs + 2, spec.gridH * cs + 2);
